@@ -146,7 +146,7 @@ if __name__ == '__main__':
     parser.add_argument('save_path', type=str, help='Path to save the PyTorch state dict')
     parser.add_argument('--statedict', action='store_true', help='Export to state dict instead of TorchScript')
     parser.add_argument('--fp32', action='store_true', help='Save at full precision')
-    parser.add_argument('--skiptest', action='store_true', help='Save at full precision')
+    parser.add_argument('--skiptest', action='store_true', help='Skip testing and save model immediately instead')
     parser.add_argument('--gpu', action='store_true', help='Use GPU')
 
     args = parser.parse_args()
