@@ -40,7 +40,7 @@ def inference(model_path, img1, img2, save_path, gpu, inter_frames, fps, half):
 
     splits = torch.linspace(0, 1, inter_frames + 2)
 
-    for _ in tqdm(remains, 'Generating in-between frames'):
+    for _ in tqdm(range(len(remains)), 'Generating in-between frames'):
         starts = splits[idxes[:-1]]
         ends = splits[idxes[1:]]
         distances = ((splits[None, remains] - starts[:, None]) / (ends[:, None] - starts[:, None]) - .5).abs()
@@ -70,7 +70,7 @@ def inference(model_path, img1, img2, save_path, gpu, inter_frames, fps, half):
     video_folder = os.path.split(save_path)[0]
     os.makedirs(video_folder, exist_ok=True)
 
-    x1, y1, x2, y2 = crop_region_1
+    y1, x1, y2, x2 = crop_region_1
     frames = [(tensor[0] * 255).byte().flip(0).permute(1, 2, 0).numpy()[y1:y2, x1:x2].copy() for tensor in results]
 
     w, h = frames[0].shape[1::-1]

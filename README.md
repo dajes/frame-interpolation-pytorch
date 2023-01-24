@@ -65,3 +65,24 @@ Argument list:
 * ```--fp32``` Save weights at full precision
 * ```--skiptest``` Skip testing and save model immediately instead
 * ```--gpu``` Whether to attempt to use GPU for testing
+
+# Testing exported model
+The following script creates an MP4 video of interpolated frames between 2 input images:
+```
+python inference.py "model_path" "img1" "img2" [--save_path SAVE_PATH] [--gpu] [--fp16] [--frames FRAMES] [--fps FPS]
+```
+* ```model_path``` Path to the exported TorchScript checkpoint
+* ```img1``` Path to the first image
+* ```img2``` Path to the second image
+* ```--save_path SAVE_PATH``` Path to save the interpolated frames as a video, if absent it will be saved in the same directory as ```img1``` is located and named ```output.mp4```
+* ```--gpu``` Whether to attempt to use GPU for predictions
+* ```--fp16``` Whether to use fp16 for calculations, speeds inference up on GPUs with tensor cores
+* ```--frames FRAMES``` Number of frames to interpolate between the input images
+* ```--fps FPS``` FPS of the output video
+
+### Results on the 2 example photos from original repository:
+<p float="left">
+  <img src="photos/one.png" width="384px" />
+  <img src="photos/two.png" width="384px" /> 
+</p>
+<img src="photos/output.gif" height="384px"/>
