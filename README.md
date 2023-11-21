@@ -9,7 +9,7 @@ model.
 
 # Quickstart
 
-Download a compiled model from [the release](https://github.com/dajes/frame-interpolation-pytorch/releases/tag/v1.0.0)
+Download a compiled model from [the release](https://github.com/dajes/frame-interpolation-pytorch/releases)
 and specify the path to the file in the following snippet:
 
 ```python
