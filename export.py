@@ -119,22 +119,23 @@ def main(model_path, save_path, export_to_torchscript=True, use_gpu=False, fp16=
     if use_gpu and torch.cuda.is_available():
         interpolator = interpolator.cuda()
     else:
-        if fp16 and use_gpu:
-            warnings.warn('No GPU is available, using CPU FP32', UserWarning)
-        fp16 = False
+        use_gpu = False
 
     if fp16:
         interpolator = interpolator.half()
     if export_to_torchscript:
         interpolator = torch.jit.script(interpolator)
-
-    if not skiptest:
-        test_model(interpolator, model, fp16, use_gpu)
-
     if export_to_torchscript:
         interpolator.save(save_path)
     else:
         torch.save(interpolator.state_dict(), save_path)
+
+    if not skiptest:
+        if not use_gpu and fp16:
+            warnings.warn('Testing FP16 model on CPU is impossible, casting it back')
+            interpolator = interpolator.float()
+            fp16 = False
+        test_model(interpolator, model, fp16, use_gpu)
 
 
 if __name__ == '__main__':
