@@ -125,8 +125,8 @@ class Interpolator(nn.Module):
         # Note: In film_net we fix time to be 0.5, and recursively invoke the interpo-
         # lator for multi-frame interpolation. Below, we create a constant tensor of
         # shape [B]. We use the `time` tensor to infer the batch size.
-        backward_flow = util.multiply_pyramid(backward_flow_pyramid, batch_dt[:, 0])
-        forward_flow = util.multiply_pyramid(forward_flow_pyramid, 1 - batch_dt[:, 0])
+        backward_flow = util.multiply_pyramid(backward_flow_pyramid, batch_dt)
+        forward_flow = util.multiply_pyramid(forward_flow_pyramid, 1 - batch_dt)
 
         pyramids_to_warp = [
             util.concatenate_pyramids(image_pyramids[0][:self.fusion_pyramid_levels],
@@ -154,6 +154,5 @@ class Interpolator(nn.Module):
             'backward_flow_pyramid': backward_flow_pyramid,
         }
 
-    @torch.jit.export
     def forward(self, x0, x1, batch_dt) -> torch.Tensor:
         return self.debug_forward(x0, x1, batch_dt)['image'][0]

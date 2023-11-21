@@ -102,7 +102,7 @@ def multiply_pyramid(pyramid: List[torch.Tensor],
     # the batch of images from BxHxWxC-format to CxHxWxB. This can then be
     # multiplied with a batch of scalars, then we transpose back to the standard
     # BxHxWxC form.
-    return [image * scalar for image in pyramid]
+    return [image * scalar[..., None, None] for image in pyramid]
 
 
 def flow_pyramid_synthesis(
