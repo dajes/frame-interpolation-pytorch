@@ -49,15 +49,15 @@ class FlowEstimator(nn.Module):
 
         self._convs = nn.ModuleList()
         for i in range(num_convs):
-            self._convs.append(util.conv(in_channels=in_channels, out_channels=num_filters, size=3))
+            self._convs.append(util.Conv2d(in_channels=in_channels, out_channels=num_filters, size=3))
             in_channels = num_filters
-        self._convs.append(util.conv(in_channels, num_filters // 2, size=1))
+        self._convs.append(util.Conv2d(in_channels, num_filters // 2, size=1))
         in_channels = num_filters // 2
         # For the final convolution, we want no activation at all to predict the
         # optical flow vector values. We have done extensive testing on explicitly
         # bounding these values using sigmoid, but it turned out that having no
         # activation gives better results.
-        self._convs.append(util.conv(in_channels, 2, size=1, activation=None))
+        self._convs.append(util.Conv2d(in_channels, 2, size=1, activation=None))
 
     def forward(self, features_a: torch.Tensor, features_b: torch.Tensor) -> torch.Tensor:
         """Estimates optical flow between two images.

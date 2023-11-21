@@ -70,7 +70,8 @@ from typing import List
 import torch
 from torch import nn
 from torch.nn import functional as F
-from util import conv
+
+from util import Conv2d
 
 
 class SubTreeExtractor(nn.Module):
@@ -86,8 +87,8 @@ class SubTreeExtractor(nn.Module):
         convs = []
         for i in range(n_layers):
             convs.append(nn.Sequential(
-                conv(in_channels, (channels << i), 3),
-                conv((channels << i), (channels << i), 3)
+                Conv2d(in_channels, (channels << i), 3),
+                Conv2d((channels << i), (channels << i), 3)
             ))
             in_channels = channels << i
         self.convs = nn.ModuleList(convs)

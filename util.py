@@ -144,18 +144,23 @@ def concatenate_pyramids(pyramid1: List[torch.Tensor],
     return result
 
 
-def conv(in_channels, out_channels, size, activation: Optional[str] = 'relu'):
-    # Since PyTorch doesn't have an in-built activation in Conv2d, we use a
-    # Sequential layer to combine Conv2d and Leaky ReLU in one module.
-    _conv = nn.Conv2d(
-        in_channels=in_channels,
-        out_channels=out_channels,
-        kernel_size=size,
-        padding='same')
-    if activation is None:
-        return _conv
-    assert activation == 'relu'
-    return nn.Sequential(
-        _conv,
-        nn.LeakyReLU(.2)
-    )
+class Conv2d(nn.Sequential):
+    def __init__(self, in_channels, out_channels, size, activation: Optional[str] = 'relu'):
+        assert activation in (None, 'relu')
+        super().__init__(
+            nn.Conv2d(
+                in_channels=in_channels,
+                out_channels=out_channels,
+                kernel_size=size,
+                padding='same' if size % 2 else 0)
+        )
+        self.size = size
+        self.activation = nn.LeakyReLU(.2) if activation == 'relu' else None
+
+    def forward(self, x):
+        if not self.size % 2:
+            x = F.pad(x, (0, 1, 0, 1))
+        y = self[0](x)
+        if self.activation is not None:
+            y = self.activation(y)
+        return y

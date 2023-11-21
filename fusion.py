@@ -31,7 +31,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from util import conv
+from util import Conv2d
 
 _NUMBER_OF_COLOR_CHANNELS = 3
 
@@ -75,9 +75,9 @@ class Fusion(nn.Module):
         for i in range(n_layers)[::-1]:
             num_filters = (filters << i) if i < specialized_layers else (filters << specialized_layers)
             convs = nn.ModuleList([
-                conv(in_channels, num_filters, size=2, activation=None),
-                conv(in_channels + (increase or num_filters), num_filters, size=3),
-                conv(num_filters, num_filters, size=3)]
+                Conv2d(in_channels, num_filters, size=2, activation=None),
+                Conv2d(in_channels + (increase or num_filters), num_filters, size=3),
+                Conv2d(num_filters, num_filters, size=3)]
             )
             self.convs.append(convs)
             in_channels = num_filters
